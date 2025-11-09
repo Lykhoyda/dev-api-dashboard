@@ -4,40 +4,36 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-	/* Border Radius Tokens */
+	/* Border Radius Tokens - Design Spec */
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--radius-DEFAULT: 6px;
+	--radius-lg-spec: 8px;
+	--radius-xl-spec: 12px;
+	--radius-full: 9999px;
 
-	/* 8-Point Grid Spacing Tokens */
-	--spacing-1: 0.5rem; /* 8px */
-	--spacing-2: 1rem; /* 16px */
-	--spacing-3: 1.5rem; /* 24px */
-	--spacing-4: 2rem; /* 32px */
-	--spacing-5: 2.5rem; /* 40px */
-	--spacing-6: 3rem; /* 48px */
-	--spacing-8: 4rem; /* 64px */
-	--spacing-10: 5rem; /* 80px */
-	--spacing-12: 6rem; /* 96px */
-	--spacing-16: 8rem; /* 128px */
-	--spacing-20: 10rem; /* 160px */
-	--spacing-24: 12rem; /* 192px */
+	/* Spacing: Using Tailwind's default spacing scale for simplicity */
+	/* No custom spacing tokens - using standard Tailwind scale (1=4px, 2=8px, 4=16px, 6=24px, etc.) */
 
-	/* Typography Scale - Major Third (1.25 ratio) */
-	--font-size-xs: 0.64rem; /* 10.24px */
-	--font-size-sm: 0.8rem; /* 12.8px */
-	--font-size-base: 1rem; /* 16px */
-	--font-size-lg: 1.25rem; /* 20px */
-	--font-size-xl: 1.563rem; /* 25px */
-	--font-size-2xl: 1.953rem; /* 31.25px */
-	--font-size-3xl: 2.441rem; /* 39.06px */
-	--font-size-4xl: 3.052rem; /* 48.83px */
+	/* Typography Scale - Design Spec */
+	--font-size-xs: 12px;
+	--font-size-sm: 14px;
+	--font-size-base: 16px;
+	--font-size-lg: 18px;
+	--font-size-xl: 20px;
+	--font-size-2xl: 24px;
+	--font-size-3xl: 32px;
 
 	/* Line Heights */
 	--line-height-tight: 1.25;
 	--line-height-normal: 1.5;
 	--line-height-relaxed: 1.75;
+
+	/* Font Families - Design Spec */
+	--font-display: "Inter", sans-serif;
+	--font-mono: "JetBrains Mono", monospace;
 
 	/* Color Tokens */
 	--color-background: var(--background);
@@ -77,6 +73,39 @@
 	--color-warning: var(--warning);
 	--color-error: var(--error);
 	--color-info: var(--info);
+
+	/* Design Spec Colors - Direct utility classes for HTML design */
+	--color-primary-light: #2563eb;
+	--color-primary-dark: #60a5fa;
+	--color-background-light: #ffffff;
+	--color-background-dark: #0a0a0a;
+	--color-surface-light: #f9fafb;
+	--color-surface-dark: #1a1a1a;
+	--color-surface-elevated-dark: #252525;
+	--color-border-light: #e5e7eb;
+	--color-border-dark: #2d2d2d;
+	--color-divider-dark: #333333;
+	--color-text-primary-light: #111827;
+	--color-text-primary-dark: #f9fafb;
+	--color-text-secondary-light: #6b7280;
+	--color-text-secondary-dark: #9ca3af;
+	--color-text-tertiary-dark: #6b7280;
+	--color-text-link-dark: #60a5fa;
+	--color-text-link-hover-dark: #93c5fd;
+	--color-success-light: #059669;
+	--color-success-dark: #34d399;
+	--color-warning-light: #d97706;
+	--color-warning-dark: #fbbf24;
+	--color-error-light: #dc2626;
+	--color-error-dark: #f87171;
+	--color-info-dark: #38bdf8;
+
+	/* Shadow Tokens - Design Spec Dark Mode */
+	--shadow-sm-dark: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+	--shadow-md-dark:
+		0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+	--shadow-lg-dark:
+		0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }
 
 :root {
@@ -196,5 +225,10 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+		font-family: var(--font-display);
+	}
+	code,
+	pre {
+		font-family: var(--font-mono);
 	}
 }
