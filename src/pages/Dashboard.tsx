@@ -11,11 +11,15 @@ import { ActivityItem } from '@/components/dashboard/ActivityItem';
 import { MetricCard } from '@/components/dashboard/MetricCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Dashboard() {
+	const { user } = useAuth();
+	const firstName = user?.name.split(' ')[0] || 'Guest';
+
 	return (
 		<PageLayout
-			title="Welcome back, Olivia!"
+			title={`Welcome back, ${firstName}!`}
 			description="Here's a summary of your activity today."
 		>
 			{/* Stats Grid */}
