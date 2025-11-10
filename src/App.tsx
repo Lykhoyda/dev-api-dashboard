@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AppShell } from './components/layout/AppShell';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AppShell } from './components/layout/AppShell';
 import { ApiKeys } from './pages/ApiKeys';
 import { Dashboard } from './pages/Dashboard';
 import { Documentation } from './pages/Documentation';

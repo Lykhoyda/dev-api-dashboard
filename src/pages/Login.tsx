@@ -1,8 +1,8 @@
+import { LogIn } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
 import { Loading } from '@/components/ui/Loading';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Login page component with guest authentication.

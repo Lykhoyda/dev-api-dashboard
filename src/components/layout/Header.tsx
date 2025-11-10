@@ -1,8 +1,8 @@
 import { Bell, LogOut, Search, User } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { getRouteLabel } from '@/config/routes';
-import { IconButton } from '@/components/ui/IconButton';
 import { EnvironmentToggle } from '@/components/environment/EnvironmentToggle';
+import { IconButton } from '@/components/ui/IconButton';
+import { getRouteLabel } from '@/config/routes';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Header() {

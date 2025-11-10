@@ -1,9 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { AlertTriangle, FlaskConical, Rocket } from 'lucide-react';
-import {
-	type EnvironmentMode,
-	useEnvironment
-} from '@/contexts/EnvironmentContext';
+import { useEffect, useRef, useState } from 'react';
 import {
 	Dialog,
 	DialogContent,
@@ -12,6 +8,10 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
+import {
+	type EnvironmentMode,
+	useEnvironment
+} from '@/contexts/EnvironmentContext';
 
 /**
  * EnvironmentToggle - Segmented control for switching between test and production modes.
