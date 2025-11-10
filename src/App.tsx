@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AppShell } from './components/layout/AppShell';
+import { Toaster } from './components/ui/sonner';
 import { ApiKeys } from './pages/ApiKeys';
 import { Dashboard } from './pages/Dashboard';
 import { Documentation } from './pages/Documentation';
@@ -60,6 +61,7 @@ function App() {
 					{/* Redirect any unknown routes to dashboard */}
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
+				<Toaster />
 			</BrowserRouter>
 		</div>
 	);

@@ -4,9 +4,13 @@ import './index.css';
 import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext';
 import { EnvironmentProvider } from './contexts/EnvironmentContext';
+import { initializeSampleKeys } from './lib';
 
 // Apply dark theme
 document.documentElement.classList.add('dark');
+
+// Initialize sample API keys if none exist
+initializeSampleKeys();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

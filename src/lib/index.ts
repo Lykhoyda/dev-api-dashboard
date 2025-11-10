@@ -11,6 +11,7 @@ export {
 	createApiKey,
 	deleteApiKey,
 	getApiKeys,
+	initializeSampleKeys,
 	maskApiKey,
 	regenerateApiKey,
 	revokeApiKey

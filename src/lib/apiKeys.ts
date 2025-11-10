@@ -54,12 +54,16 @@ function loadKeys(): ApiKey[] {
 
 /**
  * Save keys to localStorage.
+ * @throws {Error} If localStorage quota is exceeded or storage is unavailable
  */
 function saveKeys(keys: ApiKey[]): void {
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(keys));
 	} catch (error) {
 		console.error('Failed to save keys:', error);
+		throw new Error(
+			'Failed to save API keys. Your browser storage may be full or unavailable.'
+		);
 	}
 }
 
@@ -161,4 +165,75 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 	} catch {
 		return false;
 	}
+}
+
+/**
+ * Initialize sample API keys if none exist.
+ * Called automatically on app load to provide demo data.
+ */
+export function initializeSampleKeys(): void {
+	const existingKeys = loadKeys();
+	if (existingKeys.length > 0) {
+		return; // Keys already exist, don't overwrite
+	}
+
+	const now = new Date();
+	const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+	const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+	const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+	const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+	const sampleKeys: ApiKey[] = [
+		{
+			id: crypto.randomUUID(),
+			name: 'Production Server Key',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: twoWeeksAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Staging Environment',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: oneMonthAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Legacy Mobile App',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: sixMonthsAgo.toISOString(),
+			revoked: true
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Local Dev Key',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: oneDayAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Production API Key',
+			key: generateApiKey('production'),
+			environment: 'production',
+			createdAt: twoWeeksAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Production Backup',
+			key: generateApiKey('production'),
+			environment: 'production',
+			createdAt: oneMonthAgo.toISOString(),
+			revoked: false
+		}
+	];
+
+	saveKeys(sampleKeys);
+	console.log('✅ Initialized sample API keys');
 }
