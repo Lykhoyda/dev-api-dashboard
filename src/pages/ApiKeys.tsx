@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { ApiKeyCard } from '@/components/api-keys/ApiKeyCard';
+import { ApiKeyStatusBadge } from '@/components/api-keys/ApiKeyStatusBadge';
 import { CreateKeyModal } from '@/components/api-keys/CreateKeyModal';
 import { RegenerateKeyModal } from '@/components/api-keys/RegenerateKeyModal';
 import {
@@ -38,6 +40,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { useEnvironment } from '@/contexts/EnvironmentContext';
+import { useFeatureFlags } from '@/contexts/FeatureFlagsContext';
 import {
 	type ApiKey,
 	deleteApiKey,
@@ -45,41 +48,19 @@ import {
 	maskApiKey,
 	revokeApiKey
 } from '@/lib/apiKeys';
-
-/**
- * Format a date string to relative time (e.g., "2 weeks ago")
- */
-function formatRelativeTime(dateString: string): string {
-	const date = new Date(dateString);
-	const now = new Date();
-	const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-	const intervals = {
-		year: 31536000,
-		month: 2592000,
-		week: 604800,
-		day: 86400,
-		hour: 3600,
-		minute: 60
-	};
-
-	for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-		const interval = Math.floor(seconds / secondsInUnit);
-		if (interval >= 1) {
-			return `${interval} ${unit}${interval > 1 ? 's' : ''} ago`;
-		}
-	}
-
-	return 'Just now';
-}
+import { formatRelativeTime } from '@/lib/dateUtils';
 
 export function ApiKeys() {
 	const { mode } = useEnvironment();
+	const { isEnabled } = useFeatureFlags();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [createModalOpen, setCreateModalOpen] = useState(false);
 	const [regenerateModalOpen, setRegenerateModalOpen] = useState(false);
 	const [keyToRegenerate, setKeyToRegenerate] = useState<ApiKey | null>(null);
 	const [, forceUpdate] = useState(0);
+
+	// Check if card view is enabled via feature flag
+	const useCardView = isEnabled('cardViewForApiKeys');
 
 	// Trigger re-render after key operations
 	const handleKeyUpdate = useCallback(() => {
@@ -168,64 +149,89 @@ export function ApiKeys() {
 					</div>
 				</div>
 
-				{/* Data Table */}
-				<div className="overflow-hidden rounded-xl border shadow-sm">
-					{filteredKeys.length === 0 ? (
+				{/* Data Display - Card View or Table View */}
+				{filteredKeys.length === 0 ? (
+					<div className="overflow-hidden rounded-xl border shadow-sm">
 						<EmptyState
 							hasSearch={Boolean(searchQuery.trim())}
 							onCreateClick={() => setCreateModalOpen(true)}
 						/>
-					) : (
-						<>
-							<div className="overflow-x-auto">
-								<Table>
-									<TableHeader>
-										<TableRow>
-											<TableHead className="w-1/4">
-												<div className="flex items-center gap-1">
-													Name
-													<ArrowUpDown className="h-4 w-4" />
-												</div>
-											</TableHead>
-											<TableHead className="w-1/4">API Key</TableHead>
-											<TableHead className="w-1/6">
-												<div className="flex items-center gap-1">
-													Created
-													<ArrowUpDown className="h-4 w-4" />
-												</div>
-											</TableHead>
-											<TableHead className="w-1/6">Last Used</TableHead>
-											<TableHead className="w-1/12">Status</TableHead>
-											<TableHead className="w-[60px] text-right">
-												Actions
-											</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{filteredKeys.map((key) => (
-											<KeyRow
-												key={key.id}
-												apiKey={key}
-												onUpdate={handleKeyUpdate}
-												onRegenerate={(apiKey) => {
-													setKeyToRegenerate(apiKey);
-													setRegenerateModalOpen(true);
-												}}
-											/>
-										))}
-									</TableBody>
-								</Table>
-							</div>
+					</div>
+				) : useCardView ? (
+					<>
+						{/* Card Grid View */}
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							{filteredKeys.map((key) => (
+								<ApiKeyCard
+									key={key.id}
+									apiKey={key}
+									onUpdate={handleKeyUpdate}
+									onRegenerate={(apiKey) => {
+										setKeyToRegenerate(apiKey);
+										setRegenerateModalOpen(true);
+									}}
+								/>
+							))}
+						</div>
 
-							{/* Pagination Footer */}
-							<div className="flex items-center justify-between border-t px-4 py-3">
-								<div className="text-sm text-muted-foreground">
-									Showing {filteredKeys.length} of {environmentKeys.length} keys
-								</div>
+						{/* Card View Footer */}
+						<div className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 shadow-sm">
+							<div className="text-sm text-muted-foreground">
+								Showing {filteredKeys.length} of {environmentKeys.length} keys
 							</div>
-						</>
-					)}
-				</div>
+						</div>
+					</>
+				) : (
+					<div className="overflow-hidden rounded-xl border shadow-sm">
+						{/* Table View */}
+						<div className="overflow-x-auto">
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead className="w-1/4">
+											<div className="flex items-center gap-1">
+												Name
+												<ArrowUpDown className="h-4 w-4" />
+											</div>
+										</TableHead>
+										<TableHead className="w-1/4">API Key</TableHead>
+										<TableHead className="w-1/6">
+											<div className="flex items-center gap-1">
+												Created
+												<ArrowUpDown className="h-4 w-4" />
+											</div>
+										</TableHead>
+										<TableHead className="w-1/6">Last Used</TableHead>
+										<TableHead className="w-1/12">Status</TableHead>
+										<TableHead className="w-[60px] text-right">
+											Actions
+										</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{filteredKeys.map((key) => (
+										<KeyRow
+											key={key.id}
+											apiKey={key}
+											onUpdate={handleKeyUpdate}
+											onRegenerate={(apiKey) => {
+												setKeyToRegenerate(apiKey);
+												setRegenerateModalOpen(true);
+											}}
+										/>
+									))}
+								</TableBody>
+							</Table>
+						</div>
+
+						{/* Table View Footer */}
+						<div className="flex items-center justify-between border-t px-4 py-3">
+							<div className="text-sm text-muted-foreground">
+								Showing {filteredKeys.length} of {environmentKeys.length} keys
+							</div>
+						</div>
+					</div>
+				)}
 			</div>
 
 			{/* Create Key Modal */}
@@ -321,17 +327,7 @@ function KeyRow({
 
 				{/* Status */}
 				<TableCell>
-					{apiKey.revoked ? (
-						<Badge variant="secondary" className="gap-1.5">
-							<span className="h-2 w-2 rounded-full bg-muted-foreground" />
-							Revoked
-						</Badge>
-					) : (
-						<Badge variant="success" className="gap-1.5">
-							<span className="h-2 w-2 rounded-full bg-green-500" />
-							Active
-						</Badge>
-					)}
+					<ApiKeyStatusBadge revoked={apiKey.revoked} />
 				</TableCell>
 
 				{/* Actions */}

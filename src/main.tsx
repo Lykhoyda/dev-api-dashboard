@@ -4,6 +4,7 @@ import './index.css';
 import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext';
 import { EnvironmentProvider } from './contexts/EnvironmentContext';
+import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext';
 import { initializeSampleKeys } from './lib';
 
 // Apply dark theme
@@ -21,7 +22,9 @@ createRoot(rootElement).render(
 	<StrictMode>
 		<AuthProvider>
 			<EnvironmentProvider>
-				<App />
+				<FeatureFlagsProvider>
+					<App />
+				</FeatureFlagsProvider>
 			</EnvironmentProvider>
 		</AuthProvider>
 	</StrictMode>

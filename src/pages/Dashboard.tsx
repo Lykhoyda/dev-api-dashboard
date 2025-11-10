@@ -8,6 +8,7 @@ import {
 	XCircle
 } from 'lucide-react';
 import { ActivityItem } from '@/components/dashboard/ActivityItem';
+import { FeatureFlagsPanel } from '@/components/dashboard/FeatureFlagsPanel';
 import { MetricCard } from '@/components/dashboard/MetricCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -124,6 +125,9 @@ export function Dashboard() {
 					</div>
 				</div>
 			</div>
+
+			{/* Feature Flags Panel */}
+			<FeatureFlagsPanel />
 		</PageLayout>
 	);
 }

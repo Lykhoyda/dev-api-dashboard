@@ -8,6 +8,7 @@ import {
 	useRef,
 	useState
 } from 'react';
+import { isStorageAvailable } from '@/lib/storage';
 
 /**
  * SECURITY NOTE: This is a DEMO implementation for showcase purposes only.
@@ -51,18 +52,6 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-
-/**
- * Check if localStorage is available.
- * Returns false in SSR, tests, or hardened browsers.
- */
-function isStorageAvailable(): boolean {
-	try {
-		return typeof window !== 'undefined' && Boolean(window.localStorage);
-	} catch {
-		return false;
-	}
-}
 
 /**
  * Generate a mock JWT-style token for demo purposes.

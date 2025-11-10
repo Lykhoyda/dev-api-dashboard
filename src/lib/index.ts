@@ -16,4 +16,16 @@ export {
 	regenerateApiKey,
 	revokeApiKey
 } from './apiKeys';
+
+// Date Utilities
+export { formatRelativeTime } from './dateUtils';
+
+// Storage Utilities
+export {
+	getStorageItem,
+	isStorageAvailable,
+	removeStorageItem,
+	setStorageItem
+} from './storage';
+
 export { cn } from './utils';

@@ -7,6 +7,7 @@ import {
 	useMemo,
 	useState
 } from 'react';
+import { isStorageAvailable } from '@/lib/storage';
 
 /**
  * Environment modes supported by the application.
@@ -29,18 +30,6 @@ interface EnvironmentContextValue {
 const EnvironmentContext = createContext<EnvironmentContextValue | undefined>(
 	undefined
 );
-
-/**
- * Check if localStorage is available.
- * Returns false in SSR, tests, or hardened browsers.
- */
-function isStorageAvailable(): boolean {
-	try {
-		return typeof window !== 'undefined' && Boolean(window.localStorage);
-	} catch {
-		return false;
-	}
-}
 
 /**
  * Load environment mode from localStorage.
