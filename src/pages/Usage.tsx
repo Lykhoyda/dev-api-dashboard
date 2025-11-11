@@ -53,7 +53,7 @@ function StatsCard({
 		: 'text-red-600 dark:text-red-400';
 
 	return (
-		<div className="rounded-xl border bg-card p-6 shadow-sm">
+		<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 			<div className="flex items-start justify-between">
 				<div className="flex-1">
 					<p className="text-sm font-medium text-muted-foreground">{title}</p>
@@ -227,7 +227,7 @@ export function Usage() {
 					</div>
 
 					{/* Time Range Filter */}
-					<div className="flex items-center gap-1 rounded-lg border bg-card p-1">
+					<div className="flex items-center gap-1 rounded-lg border border-border-dark bg-surface-dark p-1">
 						<Button
 							variant={timeRange === '24h' ? 'default' : 'ghost'}
 							size="sm"
@@ -279,7 +279,7 @@ export function Usage() {
 				</div>
 
 				{/* Request Volume Chart */}
-				<div className="rounded-xl border bg-card p-6 shadow-sm">
+				<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 					<div className="mb-4">
 						<h2 className="text-lg font-semibold">Request Volume</h2>
 						<p className="text-sm text-muted-foreground">
@@ -338,7 +338,7 @@ export function Usage() {
 
 				{/* Additional Metrics */}
 				<div className="grid gap-4 md:grid-cols-2">
-					<div className="rounded-xl border bg-card p-6 shadow-sm">
+					<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 						<h3 className="font-semibold">Error Rate</h3>
 						<div className="mt-2 flex items-baseline gap-2">
 							<span className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -350,7 +350,7 @@ export function Usage() {
 						</div>
 					</div>
 
-					<div className="rounded-xl border bg-card p-6 shadow-sm">
+					<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 						<h3 className="font-semibold">Peak Request Time</h3>
 						<div className="mt-2 flex items-baseline gap-2">
 							<span className="text-2xl font-bold">14:00 - 15:00</span>

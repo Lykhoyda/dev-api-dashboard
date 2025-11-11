@@ -1,39 +1,36 @@
 /**
- * Usage Data Generator
+ * Unified Mock Data Generator
  *
- * Generates 14 days of realistic synthetic API usage data for test and production environments.
+ * Generates all mock data for the application:
+ * - API keys (test and production)
+ * - Usage data (14 days, realistic patterns)
  *
- * Features:
- * - Weekday peaks (higher usage Monday-Friday)
- * - Business hour patterns (9am-5pm peaks)
- * - Realistic status code distribution (95% 2xx, 3% 4xx, 2% 5xx)
- * - Occasional error spikes for realism
- * - Multiple API keys represented
- * - Variety of endpoints
- * - Response time distribution (50-500ms typical, occasional outliers)
- *
- * Dataset size: ~14k rows, ~2.5MB JSON - optimized for "tiny" dataset requirement
+ * This ensures referential integrity between keys and usage data.
  *
  * Usage:
  * ```bash
- * tsx scripts/generateUsageData.ts
+ * yarn seed:all
  * ```
  *
  * Output:
- * - public/data/usage-test.json (~1.5MB)
- * - public/data/usage-production.json (~1MB)
+ * - public/data/api-keys.json
+ * - public/data/usage-test.json
+ * - public/data/usage-production.json
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { generateApiKey } from '../src/lib/apiKeys.js';
 import type {
 	ApiEndpoint,
+	ApiKey,
+	ApiKeysData,
 	ApiRequest,
 	EndpointStats,
 	StatusCodeDistribution,
 	UsageDataset,
 	UsageStats
-} from '../src/types/usage';
+} from '../src/types/mock-data.js';
 
 const ENDPOINTS: ApiEndpoint[] = [
 	'/api/users',
@@ -58,109 +55,125 @@ const STATUS_CODES = {
 	serverError: [500, 502, 503, 504]
 };
 
-/**
- * Generate a random integer between min and max (inclusive).
- */
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
 function randomInt(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/**
- * Pick a random element from an array.
- */
 function randomChoice<T>(array: T[]): T {
 	return array[randomInt(0, array.length - 1)];
 }
 
-/**
- * Get day of week (0 = Sunday, 6 = Saturday).
- */
 function getDayOfWeek(date: Date): number {
 	return date.getDay();
 }
 
-/**
- * Check if date is a weekday.
- */
 function isWeekday(date: Date): boolean {
 	const day = getDayOfWeek(date);
 	return day >= 1 && day <= 5; // Monday-Friday
 }
 
-/**
- * Get hour multiplier for business hours pattern.
- * Higher values during business hours (9am-5pm).
- */
 function getHourMultiplier(hour: number): number {
-	// 12am-6am: 0.2x (very low traffic)
 	if (hour >= 0 && hour < 6) return 0.2;
-	// 6am-9am: 0.5x (ramping up)
 	if (hour >= 6 && hour < 9) return 0.5;
-	// 9am-12pm: 1.2x (morning peak)
 	if (hour >= 9 && hour < 12) return 1.2;
-	// 12pm-1pm: 0.8x (lunch dip)
 	if (hour >= 12 && hour < 13) return 0.8;
-	// 1pm-5pm: 1.5x (afternoon peak)
 	if (hour >= 13 && hour < 17) return 1.5;
-	// 5pm-8pm: 0.7x (wind down)
 	if (hour >= 17 && hour < 20) return 0.7;
-	// 8pm-12am: 0.3x (evening low)
 	return 0.3;
 }
 
-/**
- * Generate a status code based on distribution.
- * 95% 2xx, 3% 4xx, 2% 5xx (with occasional error spikes).
- */
 function generateStatusCode(isErrorSpike: boolean): number {
 	if (isErrorSpike) {
-		// During error spikes: 60% errors, 40% success
 		const rand = Math.random();
-		if (rand < 0.4) {
-			return randomChoice(STATUS_CODES.success);
-		}
-		if (rand < 0.7) {
-			return randomChoice(STATUS_CODES.clientError);
-		}
+		if (rand < 0.4) return randomChoice(STATUS_CODES.success);
+		if (rand < 0.7) return randomChoice(STATUS_CODES.clientError);
 		return randomChoice(STATUS_CODES.serverError);
 	}
 
-	// Normal distribution
 	const rand = Math.random();
-	if (rand < 0.95) {
-		return randomChoice(STATUS_CODES.success);
-	}
-	if (rand < 0.98) {
-		return randomChoice(STATUS_CODES.clientError);
-	}
+	if (rand < 0.95) return randomChoice(STATUS_CODES.success);
+	if (rand < 0.98) return randomChoice(STATUS_CODES.clientError);
 	return randomChoice(STATUS_CODES.serverError);
 }
 
-/**
- * Generate response time in milliseconds.
- * Typical: 50-500ms
- * Occasional outliers: up to 3000ms
- */
 function generateResponseTime(): number {
 	const rand = Math.random();
-
-	// 90% typical (50-500ms)
-	if (rand < 0.9) {
-		return randomInt(50, 500);
-	}
-
-	// 8% slow (500-1500ms)
-	if (rand < 0.98) {
-		return randomInt(500, 1500);
-	}
-
-	// 2% outliers (1500-3000ms)
+	if (rand < 0.9) return randomInt(50, 500);
+	if (rand < 0.98) return randomInt(500, 1500);
 	return randomInt(1500, 3000);
 }
 
-/**
- * Generate requests for a single hour.
- */
+// ============================================================================
+// API Key Generation
+// ============================================================================
+
+function generateApiKeys(): ApiKey[] {
+	const now = new Date();
+	const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+	const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+	const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+	const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+	return [
+		{
+			id: crypto.randomUUID(),
+			name: 'Production Server Key',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: twoWeeksAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Staging Environment',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: oneMonthAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Legacy Mobile App',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: sixMonthsAgo.toISOString(),
+			revoked: true
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Local Dev Key',
+			key: generateApiKey('test'),
+			environment: 'test',
+			createdAt: oneDayAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Production API Key',
+			key: generateApiKey('production'),
+			environment: 'production',
+			createdAt: twoWeeksAgo.toISOString(),
+			revoked: false
+		},
+		{
+			id: crypto.randomUUID(),
+			name: 'Production Backup',
+			key: generateApiKey('production'),
+			environment: 'production',
+			createdAt: oneMonthAgo.toISOString(),
+			revoked: false
+		}
+	];
+}
+
+// ============================================================================
+// Usage Data Generation
+// ============================================================================
+
 function generateHourlyRequests(
 	date: Date,
 	hour: number,
@@ -169,14 +182,12 @@ function generateHourlyRequests(
 ): ApiRequest[] {
 	const requests: ApiRequest[] = [];
 
-	// Calculate actual requests for this hour
-	const dayMultiplier = isWeekday(date) ? 1.0 : 0.4; // Weekends have 40% of weekday traffic
+	const dayMultiplier = isWeekday(date) ? 1.0 : 0.4;
 	const hourMultiplier = getHourMultiplier(hour);
 	const requestCount = Math.round(
 		baseRequestsPerHour * dayMultiplier * hourMultiplier
 	);
 
-	// Check for error spike (5% chance per hour)
 	const isErrorSpike = Math.random() < 0.05;
 
 	for (let i = 0; i < requestCount; i++) {
@@ -199,9 +210,6 @@ function generateHourlyRequests(
 	return requests;
 }
 
-/**
- * Calculate daily statistics from requests.
- */
 function calculateDailyStats(date: Date, requests: ApiRequest[]): UsageStats {
 	if (requests.length === 0) {
 		return {
@@ -241,9 +249,6 @@ function calculateDailyStats(date: Date, requests: ApiRequest[]): UsageStats {
 	};
 }
 
-/**
- * Calculate status code distribution.
- */
 function calculateStatusDistribution(
 	requests: ApiRequest[]
 ): StatusCodeDistribution[] {
@@ -267,9 +272,6 @@ function calculateStatusDistribution(
 	return distribution.sort((a, b) => b.count - a.count);
 }
 
-/**
- * Calculate endpoint statistics.
- */
 function calculateEndpointStats(requests: ApiRequest[]): EndpointStats[] {
 	const endpointData = new Map<
 		ApiEndpoint,
@@ -299,9 +301,6 @@ function calculateEndpointStats(requests: ApiRequest[]): EndpointStats[] {
 	return stats.sort((a, b) => b.count - a.count);
 }
 
-/**
- * Generate usage dataset for an environment.
- */
 function generateUsageDataset(
 	environment: 'test' | 'production',
 	days: number,
@@ -316,7 +315,7 @@ function generateUsageDataset(
 	startDate.setDate(startDate.getDate() - days);
 
 	console.log(
-		`Generating ${environment} data from ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}...`
+		`  ${environment}: Generating from ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}...`
 	);
 
 	for (let d = 0; d < days; d++) {
@@ -325,7 +324,6 @@ function generateUsageDataset(
 
 		const dailyRequests: ApiRequest[] = [];
 
-		// Generate requests for each hour of the day
 		for (let hour = 0; hour < 24; hour++) {
 			const hourlyRequests = generateHourlyRequests(
 				currentDate,
@@ -338,10 +336,6 @@ function generateUsageDataset(
 
 		requests.push(...dailyRequests);
 		dailyStats.push(calculateDailyStats(currentDate, dailyRequests));
-
-		console.log(
-			`  ${currentDate.toISOString().split('T')[0]}: ${dailyRequests.length} requests`
-		);
 	}
 
 	const dataset: UsageDataset = {
@@ -354,52 +348,71 @@ function generateUsageDataset(
 		endpointStats: calculateEndpointStats(requests)
 	};
 
-	console.log(`  Total requests: ${requests.length}`);
+	console.log(`    Total requests: ${requests.length}`);
 	console.log(
-		`  Success rate: ${((dataset.dailyStats.reduce((sum, s) => sum + s.successCount, 0) / requests.length) * 100).toFixed(2)}%`
+		`    Success rate: ${((dataset.dailyStats.reduce((sum, s) => sum + s.successCount, 0) / requests.length) * 100).toFixed(2)}%`
 	);
 
 	return dataset;
 }
 
-/**
- * Main function to generate all usage data.
- */
+// ============================================================================
+// Main
+// ============================================================================
+
 function main() {
-	console.log('🔄 Generating synthetic usage data...\n');
+	console.log('🔄 Generating all mock data...\n');
 
-	// Sample API key IDs (these would come from keysRepository in real usage)
-	const testKeyIds = [
-		'key_test_001',
-		'key_test_002',
-		'key_test_003',
-		'key_test_004',
-		'key_test_005'
-	];
+	// Step 1: Generate API keys
+	console.log('🔑 Generating API keys...');
+	const apiKeys = generateApiKeys();
+	console.log(`   Generated ${apiKeys.length} keys`);
+	console.log(`   - Test: ${apiKeys.filter((k) => k.environment === 'test').length}`);
+	console.log(
+		`   - Production: ${apiKeys.filter((k) => k.environment === 'production').length}`
+	);
+	console.log(
+		`   - Active: ${apiKeys.filter((k) => !k.revoked).length}\n`
+	);
 
-	const prodKeyIds = ['key_prod_001', 'key_prod_002', 'key_prod_003'];
+	// Step 2: Generate usage data using the generated key IDs
+	console.log('📊 Generating usage data...');
 
-	// Generate test environment data (higher volume for testing)
+	const testKeyIds = apiKeys
+		.filter((k) => k.environment === 'test' && !k.revoked)
+		.map((k) => k.id);
+
+	const prodKeyIds = apiKeys
+		.filter((k) => k.environment === 'production' && !k.revoked)
+		.map((k) => k.id);
+
 	const testDataset = generateUsageDataset('test', 14, 50, testKeyIds);
-
-	// Generate production environment data (lower volume, more realistic)
 	const prodDataset = generateUsageDataset('production', 14, 20, prodKeyIds);
 
-	// Ensure output directory exists
+	// Step 3: Ensure output directory exists
 	const outputDir = join(process.cwd(), 'public', 'data');
 	mkdirSync(outputDir, { recursive: true });
 
-	// Write datasets to files
+	// Step 4: Write all data to files
+	console.log('\n💾 Writing files...');
+
+	const keysData: ApiKeysData = { keys: apiKeys };
+
+	const keysPath = join(outputDir, 'api-keys.json');
 	const testPath = join(outputDir, 'usage-test.json');
 	const prodPath = join(outputDir, 'usage-production.json');
 
+	writeFileSync(keysPath, JSON.stringify(keysData, null, 2));
 	writeFileSync(testPath, JSON.stringify(testDataset, null, 2));
 	writeFileSync(prodPath, JSON.stringify(prodDataset, null, 2));
 
-	console.log(`\n✅ Data generation complete!`);
-	console.log(`   Test data: ${testPath}`);
-	console.log(`   Production data: ${prodPath}`);
-	console.log(`\n📊 Summary:`);
+	console.log(`   ✓ ${keysPath}`);
+	console.log(`   ✓ ${testPath}`);
+	console.log(`   ✓ ${prodPath}`);
+
+	console.log('\n✅ Mock data generation complete!');
+	console.log('\n📊 Summary:');
+	console.log(`   API keys: ${apiKeys.length}`);
 	console.log(`   Test requests: ${testDataset.requests.length}`);
 	console.log(`   Prod requests: ${prodDataset.requests.length}`);
 }

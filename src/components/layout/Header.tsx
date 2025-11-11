@@ -1,7 +1,6 @@
-import { Bell, LogOut, Search, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { EnvironmentToggle } from '@/components/environment/EnvironmentToggle';
-import { IconButton } from '@/components/ui/IconButton';
 import { getRouteLabel } from '@/config/routes';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -33,9 +32,6 @@ export function Header() {
 
 			{/* Right side actions */}
 			<div className="flex items-center gap-4">
-				<IconButton icon={Search} aria-label="Search" />
-				<IconButton icon={Bell} aria-label="Notifications" />
-
 				{/* Environment Mode Toggle */}
 				<EnvironmentToggle />
 

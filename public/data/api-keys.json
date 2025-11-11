@@ -1,0 +1,52 @@
+{
+  "keys": [
+    {
+      "id": "a1a89b94-94f9-44f9-9f7b-c8b2570f5112",
+      "name": "Production Server Key",
+      "key": "sk_test_334a2193c76f493c89aa521a49f094b2",
+      "environment": "test",
+      "createdAt": "2025-10-28T13:04:47.698Z",
+      "revoked": false
+    },
+    {
+      "id": "5956f713-1963-4cb1-a036-08616473f381",
+      "name": "Staging Environment",
+      "key": "sk_test_c63f9db10f5449cc8e8ca017b6d5df15",
+      "environment": "test",
+      "createdAt": "2025-10-12T13:04:47.698Z",
+      "revoked": false
+    },
+    {
+      "id": "ee2a33b0-3cba-4d09-b4d4-7ed14f1cb982",
+      "name": "Legacy Mobile App",
+      "key": "sk_test_f41762ee39d441e7b7b9801530eada56",
+      "environment": "test",
+      "createdAt": "2025-05-15T13:04:47.698Z",
+      "revoked": true
+    },
+    {
+      "id": "7b50a9be-f899-48fb-a663-b4e688a86db7",
+      "name": "Local Dev Key",
+      "key": "sk_test_9b41a6c1137f41e996b6ae9b6af8f022",
+      "environment": "test",
+      "createdAt": "2025-11-10T13:04:47.698Z",
+      "revoked": false
+    },
+    {
+      "id": "893be484-d889-472b-89c9-63c8c5cdad70",
+      "name": "Production API Key",
+      "key": "sk_live_9d1d42d49b76415fbd43968aa68e9152",
+      "environment": "production",
+      "createdAt": "2025-10-28T13:04:47.698Z",
+      "revoked": false
+    },
+    {
+      "id": "73562642-158b-4efe-bba0-c5e5ba367b16",
+      "name": "Production Backup",
+      "key": "sk_live_6354ab2cb88f48348f591ce59d2a92fb",
+      "environment": "production",
+      "createdAt": "2025-10-12T13:04:47.698Z",
+      "revoked": false
+    }
+  ]
+}

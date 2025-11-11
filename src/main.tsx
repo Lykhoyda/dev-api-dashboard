@@ -5,13 +5,13 @@ import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext';
 import { EnvironmentProvider } from './contexts/EnvironmentContext';
 import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext';
-import { initializeSampleKeys } from './lib';
+import { initializeApiKeys } from './lib/apiKeys';
 
 // Apply dark theme
 document.documentElement.classList.add('dark');
 
-// Initialize sample API keys if none exist
-initializeSampleKeys();
+// Initialize API keys from static JSON if localStorage is empty
+initializeApiKeys();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

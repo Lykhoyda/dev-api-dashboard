@@ -16,9 +16,7 @@ export function AppShell({ children }: AppShellProps) {
 					<div className="flex flex-col gap-12">
 						<div className="flex items-center gap-2 px-2 pt-2">
 							<div className="flex flex-col">
-								<p className="text-sm text-text-secondary-dark">
-									Sandbox Console
-								</p>
+								<p className="text-sm text-text-secondary-dark">Dev Console</p>
 							</div>
 						</div>
 

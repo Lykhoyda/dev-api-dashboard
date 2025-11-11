@@ -1,10 +1,4 @@
-import {
-	ArrowUpDown,
-	FlaskConical,
-	MoreVertical,
-	Plus,
-	Search
-} from 'lucide-react';
+import { FlaskConical, MoreVertical, Plus, Search } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { ApiKeyCard } from '@/components/api-keys/ApiKeyCard';
@@ -57,14 +51,14 @@ export function ApiKeys() {
 	const [createModalOpen, setCreateModalOpen] = useState(false);
 	const [regenerateModalOpen, setRegenerateModalOpen] = useState(false);
 	const [keyToRegenerate, setKeyToRegenerate] = useState<ApiKey | null>(null);
-	const [, forceUpdate] = useState(0);
+	const [updateTrigger, setUpdateTrigger] = useState(0);
 
 	// Check if card view is enabled via feature flag
 	const useCardView = isEnabled('cardViewForApiKeys');
 
 	// Trigger re-render after key operations
 	const handleKeyUpdate = useCallback(() => {
-		forceUpdate((prev) => prev + 1);
+		setUpdateTrigger((prev) => prev + 1);
 	}, []);
 
 	// Listen for storage changes in other tabs
@@ -81,9 +75,9 @@ export function ApiKeys() {
 	}, [handleKeyUpdate]);
 
 	// Get all keys (memoized to avoid unnecessary localStorage reads)
-	// Using forceUpdate state as dependency to trigger re-fetch
-	// biome-ignore lint/correctness/useExhaustiveDependencies: forceUpdate counter intentionally triggers refetch
-	const allKeys = useMemo(() => getApiKeys(), [forceUpdate]);
+	// Using updateTrigger state as dependency to trigger re-fetch
+	// biome-ignore lint/correctness/useExhaustiveDependencies: updateTrigger counter intentionally triggers refetch
+	const allKeys = useMemo(() => getApiKeys(), [updateTrigger]);
 
 	// Filter by current environment (memoized with proper dependencies)
 	const environmentKeys = useMemo(
@@ -151,7 +145,7 @@ export function ApiKeys() {
 
 				{/* Data Display - Card View or Table View */}
 				{filteredKeys.length === 0 ? (
-					<div className="overflow-hidden rounded-xl border shadow-sm">
+					<div className="overflow-hidden rounded-xl border border-border-dark bg-surface-dark shadow-sm-dark">
 						<EmptyState
 							hasSearch={Boolean(searchQuery.trim())}
 							onCreateClick={() => setCreateModalOpen(true)}
@@ -175,32 +169,22 @@ export function ApiKeys() {
 						</div>
 
 						{/* Card View Footer */}
-						<div className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 shadow-sm">
+						<div className="flex items-center justify-between rounded-xl border border-border-dark bg-surface-dark px-4 py-3 shadow-sm-dark">
 							<div className="text-sm text-muted-foreground">
 								Showing {filteredKeys.length} of {environmentKeys.length} keys
 							</div>
 						</div>
 					</>
 				) : (
-					<div className="overflow-hidden rounded-xl border shadow-sm">
+					<div className="overflow-hidden rounded-xl border border-border-dark bg-surface-dark shadow-sm-dark">
 						{/* Table View */}
 						<div className="overflow-x-auto">
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead className="w-1/4">
-											<div className="flex items-center gap-1">
-												Name
-												<ArrowUpDown className="h-4 w-4" />
-											</div>
-										</TableHead>
+										<TableHead className="w-1/4 pl-4">Name</TableHead>
 										<TableHead className="w-1/4">API Key</TableHead>
-										<TableHead className="w-1/6">
-											<div className="flex items-center gap-1">
-												Created
-												<ArrowUpDown className="h-4 w-4" />
-											</div>
-										</TableHead>
+										<TableHead className="w-1/6">Created</TableHead>
 										<TableHead className="w-1/6">Last Used</TableHead>
 										<TableHead className="w-1/12">Status</TableHead>
 										<TableHead className="w-[60px] text-right">
@@ -308,7 +292,7 @@ function KeyRow({
 		<>
 			<TableRow>
 				{/* Name */}
-				<TableCell className="font-semibold">{apiKey.name}</TableCell>
+				<TableCell className="pl-4 font-semibold">{apiKey.name}</TableCell>
 
 				{/* Masked Key - No copy allowed after creation */}
 				<TableCell>

@@ -1,44 +1,99 @@
-# API Dashboard Console
+# Dev Console - API Dashboard
 
-A modern, lightweight API key management and usage analytics dashboard built with React 19, TypeScript, and Vite 7.
+A modern, lightweight sandbox console for managing API keys and visualizing usage analytics.
 
-## Overview
+## 🚀 Deployed Demo on Vercel
 
-This is a pragmatic sandbox console for managing pretend API keys and visualizing usage analytics. Built as a take-home assignment with a focus on simplicity and clean code architecture.
+**Live URL:** https://api-dashboard-fo9z0pmow-lykhoydas-projects.vercel.app
 
-## Features
+---
 
-- **API Key Management** - Create, revoke, regenerate, and delete API keys for test and production environments
-- **Usage Analytics** - View 14 days of synthetic usage data with realistic patterns
-- **Environment Separation** - Separate test (sk_test_*) and production (sk_live_*) API keys
-- **Responsive UI** - Modern interface built with shadcn/ui components
-- **Type-Safe** - Full TypeScript coverage with strict type checking
+## 📋 Table of Contents
 
-## Tech Stack
+- [Core Questions](#core-questions-from-the-task-description)
+- [Getting Started](#getting-started)
+- [Testing](#testing)
+- [Tech Stack](#tech-stack)
 
-- **React 19** - Latest React with modern hooks
-- **TypeScript 5.7** - Full type safety
-- **Vite 7** - Fast build tool and dev server
-- **Tailwind CSS 3** - Utility-first styling
-- **shadcn/ui** - High-quality UI components
-- **Biome** - Fast linter and formatter
-- **Radix UI** - Accessible component primitives
+---
+
+
+## Core questions from the task description
+1) Auth - Sign in and sign out options.
+
+I chose Option C: Local mock session stored in localStorage. As it suits better to serverless style of the app and easiest
+configuration in comparison to the other options. It will be also easier to review as it doesn't require to pass any data to the app. 
+Option A with External provider will be redundant here as there is no real backend. Option B with serverless functions 
+would add unnecessary complexity for this demo app to manage cookie lifecycle plus additional setup for e2e testing.
+
+2) If I had more time: What would you extend or polish, and why?
+
+Some of the data reflected on the dashboard like API calls, Error rate, and Recent Activity is static, so I would implement
+proper reflection of the Test data on those cards as it shows the quick feedback about the state of API. Also, the simplicity of the local storage comes with 
+tradeoffs, for example in data inconsistency across multiple tabs or private browsing mode. So I would implement a more robust data
+with, for example, PostgreSQL to persist the keys, profile information and feature flags. In case of DB implementation and backend
+it would make sense to cover the app with integration tests in addition to the e2e tests.
+
+3) AI coding assistance. If you used tools like Copilot or ChatGPT, what worked well and what did not for this task?
+
+I used the AI coding assistance from Claude Code + MCP servers including Linear for the project management. AI tools worked 
+well for this task as it has relatively small scope and clear requirements. The serverless architecture set this project
+to the proof of concept category, so the AI tools can help well to prototype the app.
+
+What worked well:
+- Analyzing and generating the design for the app using Stitch tool
+- Iterative approach to coding with small focused tasks (Spec based approach)
+- Generating test data
+- Code reviews and suggestions for improvements
+
+What did not work well:
+- Need to manage the context window carefully as the conversations can get long
+- Suboptimal suggestions for architecture decisions - like over engineering for a simple task
+- UI inconsistencies in some generated components
+
+4) State management
+State is managed with React Context API for Auth, Environment and Feature Flags contexts. For the small app is sufficient to
+use React core API without introducing additional dependencies like Redux or Zustand for more complex state updates.
+
+
+5) Routing
+For routing React Router v7 is used for a simple routing with Layout and protected routes.
+
+
+6) Testing strategy
+For testing Playwright is used for E2E tests covering the happy paths of the core requirements. We don't have any
+complex business logic here that would require unit tests, so E2E tests provide sufficient coverage for the user flows.
+And absence of backend makes the integration tests redundant as well.
+
+
+7) Feature Toggle
+Feature flag is demonstrated with Card vs Table View toggle for the API Keys page. The need is in such
+toggle is more artificial for this demo app, but it shows the clear pattern for feature flag implementation. In the
+real scenario it would be probably related to a special key management feature or key type. 
+
+### Time Estimate
+
+**Total Development Time:** Approximately **18-20 hours**
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (using Node 23.1.0)
-- Yarn package manager
+- **Node.js 20+** (tested with Node 23.1.0)
+- **Yarn 4** (Berry) package manager
 
 ### Installation
 
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd api-dashboard
+
 # Install dependencies
 yarn install
 
-# Generate synthetic usage data
-yarn tsx scripts/generateUsageData.ts
+# Generate mock data (API keys + usage data)
+yarn seed:all
 ```
 
 ### Development
@@ -51,101 +106,85 @@ yarn dev
 yarn tsc --noEmit
 
 # Run linter
-yarn biome check
+yarn check
 
 # Format code
 yarn format
 
 # Build for production
 yarn build
+
+# Preview production build
+yarn preview
 ```
 
-## Project Structure
+## Generating Test Data
 
-```
-api-dashboard/
-├── docs/               # Architecture Decision Records and documentation
-│   ├── DECISIONS.md    # Technical decisions log (ADRs)
-│   ├── ROADMAP.md      # Project roadmap and progress
-│   └── ORIGINAL_TASK.md
-├── public/data/        # Generated synthetic usage data
-│   ├── usage-test.json (~2.2MB, 9.5k requests)
-│   └── usage-production.json (~903KB, 3.8k requests)
-├── scripts/
-│   └── generateUsageData.ts  # Synthetic data generator
-├── src/
-│   ├── components/     # React components
-│   │   ├── layout/     # AppShell, Header
-│   │   └── ui/         # shadcn/ui components
-│   ├── lib/            # Utilities and business logic
-│   │   ├── apiKeys.ts  # API key management (174 lines)
-│   │   └── utils.ts    # cn() utility
-│   ├── pages/          # Page components
-│   ├── types/          # TypeScript type definitions
-│   └── main.tsx        # Application entry point
-└── package.json
-```
-
-## Data Generation
-
-The project includes a synthetic data generator that creates realistic API usage patterns:
+This project uses **static mock data** (no backend required). All data is pre-generated and stored in `public/data/`:
 
 ```bash
-yarn tsx scripts/generateUsageData.ts
+# Generate all mock data (API keys + usage data)
+yarn seed:all
 ```
 
-**Output:**
-- 14 days of data (optimized for "tiny" dataset requirement)
-- Weekday vs weekend patterns (weekdays have 2.5x traffic)
-- Business hour peaks (9am-5pm higher usage)
-- Realistic status code distribution (95% 2xx, 3% 4xx, 2% 5xx)
-- Response times: 50-500ms typical, occasional outliers up to 3000ms
-- Multiple endpoints: `/api/users`, `/api/payments`, `/api/reports`, etc.
+This creates:
+- **API Keys** (`public/data/api-keys.json`) - 6 sample keys (4 test, 2 production, 1 revoked)
+- **Usage Data** (`public/data/usage-test.json`) - ~9.5k requests over 14 days
+- **Usage Data** (`public/data/usage-production.json`) - ~3.8k requests over 14 days
 
-## Architecture Decisions
+### How It Works
 
-All technical decisions are documented in Architecture Decision Records (ADRs). Key decisions:
+1. **Build Time**: Run `yarn seed:all` to generate static JSON files
+2. **Runtime**: App loads keys from JSON into localStorage on first visit
+3. **Persistence**: Keys cached in localStorage, usage data fetched as needed
 
-- **ADR-031**: YAGNI Simplification - Removed 820+ lines of unused utilities
-- **ADR-032**: Simple API Key Management - Functional approach over repository pattern (68% code reduction)
-- **ADR-029**: Synthetic Data Generation - 14 days optimized for instant first paint
-- **ADR-030**: Modern Clipboard API - Removed legacy fallback
+### Data Characteristics
 
-See [docs/DECISIONS.md](./docs/DECISIONS.md) for complete ADR history.
+- **Realistic patterns**: Weekday peaks, business hours (9am-5pm), error spikes
+- **Referential integrity**: Usage requests reference actual key IDs
+- **Type safety**: Shared TypeScript types between generator and app
 
-## Security Notes
+## Testing
 
-⚠️ **This is a demo/sandbox console with pretend API keys.**
+### E2E Tests (Playwright)
 
-- API keys are stored in browser localStorage as plain text
-- This is acceptable for demo purposes ONLY
-- DO NOT use this pattern for real API keys in production
-- Production systems should use secure backend storage with encryption at rest
+The project includes comprehensive end-to-end tests covering all required functionality:
 
-## Code Quality
+```bash
+# Run all E2E tests
+yarn test:e2e
 
-- **Type Safety**: 100% TypeScript coverage, strict mode enabled
-- **Linting**: Biome for fast, consistent code quality
-- **Formatting**: Automatic code formatting with Biome
-- **Build Size**: ~314 kB gzipped production bundle
-- **Code Reduction**: Applied YAGNI principle throughout (removed 820+ unused lines)
+# Run tests with UI mode (interactive)
+yarn test:e2e:ui
 
-## Documentation
+# Debug tests
+yarn test:e2e:debug
+```
 
-- [DECISIONS.md](./docs/DECISIONS.md) - Architecture Decision Records
-- [ROADMAP.md](./docs/ROADMAP.md) - Project roadmap and progress
-- [ORIGINAL_TASK.md](./docs/ORIGINAL_TASK.md) - Original assignment requirements
+## Tech Stack
+**Core:**
+- **React 19** - Latest React with modern hooks and concurrent features
+- **TypeScript 5.7** - Strict type safety throughout
+- **Vite 7** - Lightning-fast dev server and build tool
+- **React Router v7** - Client-side routing with layout routes
 
-## Development Principles
+**UI & Styling:**
+- **Tailwind CSS v4** - Utility-first styling with design tokens
+- **shadcn/ui** - High-quality components (New York style)
+- **Radix UI** - Accessible component primitives
+- **Lucide React** - Modern icon library
 
-This project follows pragmatic development principles:
+**Data & Charts:**
+- **Recharts** - Composable charting library
+- **localStorage** - Client-side persistence
+- **Synthetic data** - Realistic usage patterns (14 days)
 
-1. **YAGNI** (You Aren't Gonna Need It) - Don't build features until needed
-2. **Simplicity** - Prefer simple solutions over complex abstractions
-3. **Type Safety** - Leverage TypeScript for compile-time safety
-4. **Documentation** - ADRs for all architectural decisions
-5. **Code Quality** - Consistent linting and formatting
+**Quality & Testing:**
+- **Biome** - Fast linter and formatter (~25x faster than ESLint)
+- **Playwright** - E2E testing framework
+- **TypeScript strict mode** - Maximum type safety
 
-## License
+**Deployment:**
+- **Vercel** - Platform for frontend deployment
 
-This is a take-home assignment project for demonstration purposes.
+---

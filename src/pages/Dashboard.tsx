@@ -7,16 +7,34 @@ import {
 	PlusCircle,
 	XCircle
 } from 'lucide-react';
+import { useMemo } from 'react';
 import { ActivityItem } from '@/components/dashboard/ActivityItem';
 import { FeatureFlagsPanel } from '@/components/dashboard/FeatureFlagsPanel';
 import { MetricCard } from '@/components/dashboard/MetricCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEnvironment } from '@/contexts/EnvironmentContext';
+import { getApiKeys } from '@/lib/apiKeys';
 
 export function Dashboard() {
 	const { user } = useAuth();
+	const { mode } = useEnvironment();
 	const firstName = user?.name.split(' ')[0] || 'Guest';
+
+	// Calculate real API key metrics from localStorage
+	const keyMetrics = useMemo(() => {
+		const allKeys = getApiKeys();
+		const environmentKeys = allKeys.filter((key) => key.environment === mode);
+		const activeKeys = environmentKeys.filter((key) => !key.revoked);
+		const inactiveKeys = environmentKeys.filter((key) => key.revoked);
+
+		return {
+			active: activeKeys.length,
+			inactive: inactiveKeys.length,
+			total: environmentKeys.length
+		};
+	}, [mode]);
 
 	return (
 		<PageLayout
@@ -33,8 +51,12 @@ export function Dashboard() {
 				/>
 				<MetricCard
 					title="Active Keys"
-					value={5}
-					subtitle="2 inactive"
+					value={keyMetrics.active}
+					subtitle={
+						keyMetrics.inactive === 0
+							? 'All keys active'
+							: `${keyMetrics.inactive} inactive`
+					}
 					subtitleColor="tertiary"
 				/>
 				<MetricCard
@@ -111,15 +133,15 @@ export function Dashboard() {
 							href="/keys"
 						/>
 						<QuickActionCard
+							icon={Activity}
+							title="View Usage"
+							description="Explore your API usage and analytics."
+							href="/usage"
+						/>
+						<QuickActionCard
 							icon={FileText}
 							title="View Documentation"
 							description="Read our guides and tutorials."
-							href="/docs"
-						/>
-						<QuickActionCard
-							icon={Activity}
-							title="Explore API"
-							description="Browse the full API reference."
 							href="/docs"
 						/>
 					</div>

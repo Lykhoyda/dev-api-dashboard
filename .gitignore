@@ -33,3 +33,10 @@ dist-ssr
 *.sw?
 docs
 .claude
+.vercel
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/.auth/

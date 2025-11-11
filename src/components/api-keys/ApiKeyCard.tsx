@@ -75,7 +75,7 @@ export function ApiKeyCard({
 
 	return (
 		<>
-			<div className="rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+			<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark transition-shadow hover:shadow-md">
 				{/* Header with Name and Actions */}
 				<div className="mb-4 flex items-start justify-between">
 					<div className="flex items-center gap-3">

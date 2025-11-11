@@ -17,7 +17,7 @@ function InfoCard({
 	children: ReactNode;
 }) {
 	return (
-		<div className="rounded-lg border bg-card p-6">
+		<div className="rounded-lg border border-border-dark bg-surface-dark p-6">
 			<div className="mb-4 flex items-center gap-3">
 				<div className="rounded-lg bg-primary/10 p-2 text-primary">{icon}</div>
 				<h3 className="font-semibold">{title}</h3>
@@ -242,7 +242,7 @@ export function Documentation() {
 							</InfoCard>
 						</div>
 
-						<div className="rounded-lg border bg-card p-4">
+						<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 							<h4 className="mb-3 font-semibold">Synthetic Data Sources</h4>
 							<div className="space-y-2 text-sm text-muted-foreground">
 								<p>
@@ -284,7 +284,7 @@ export function Documentation() {
 
 						<div className="space-y-4">
 							{/* No API Keys */}
-							<div className="rounded-lg border bg-card p-4">
+							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									"No API keys found" or empty key list
 								</h3>
@@ -308,7 +308,7 @@ export function Documentation() {
 							</div>
 
 							{/* Analytics Not Updating */}
-							<div className="rounded-lg border bg-card p-4">
+							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									Analytics data not updating
 								</h3>
@@ -333,7 +333,7 @@ export function Documentation() {
 							</div>
 
 							{/* Private Browsing */}
-							<div className="rounded-lg border bg-card p-4">
+							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									Issues with Private/Incognito mode
 								</h3>
@@ -356,7 +356,7 @@ export function Documentation() {
 							</div>
 
 							{/* Reset Sandbox */}
-							<div className="rounded-lg border bg-card p-4">
+							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">How to reset the sandbox</h3>
 								<ul className="space-y-2 text-sm text-muted-foreground">
 									<li>• Open browser DevTools (F12 or Cmd+Option+I on Mac)</li>
