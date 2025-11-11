@@ -12,7 +12,6 @@ import {
  */
 interface FeatureFlags {
 	cardViewForApiKeys: boolean;
-	// Add more feature flags here as needed
 }
 
 interface FeatureFlagsContextType {
@@ -41,14 +40,12 @@ const STORAGE_KEY = 'feature_flags';
  */
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 	const [flags, setFlags] = useState<FeatureFlags>(() => {
-		// Load flags from localStorage on mount
 		if (typeof window === 'undefined') return DEFAULT_FLAGS;
 
 		try {
 			const stored = localStorage.getItem(STORAGE_KEY);
 			if (stored) {
 				const parsed = JSON.parse(stored) as Partial<FeatureFlags>;
-				// Merge with defaults to handle new flags
 				return { ...DEFAULT_FLAGS, ...parsed };
 			}
 		} catch (error) {
@@ -58,7 +55,6 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 		return DEFAULT_FLAGS;
 	});
 
-	// Persist flags to localStorage whenever they change
 	useEffect(() => {
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(flags));
@@ -67,7 +63,6 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 		}
 	}, [flags]);
 
-	// Listen for changes in other tabs/windows
 	useEffect(() => {
 		const handleStorageChange = (e: StorageEvent) => {
 			if (e.key === STORAGE_KEY && e.newValue) {

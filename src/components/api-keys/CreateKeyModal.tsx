@@ -94,7 +94,6 @@ Created: ${new Date().toISOString()}
 	};
 
 	const handleClose = () => {
-		// Reset state
 		setStep('form');
 		setName('');
 		setCreatedKey(null);
@@ -134,7 +133,6 @@ Created: ${new Date().toISOString()}
 
 						<form onSubmit={handleSubmit}>
 							<div className="grid gap-4 py-4">
-								{/* Name Input */}
 								<div className="grid gap-2">
 									<label htmlFor="name" className="text-sm font-medium">
 										Name <span className="text-destructive">*</span>
@@ -152,7 +150,6 @@ Created: ${new Date().toISOString()}
 									</p>
 								</div>
 
-								{/* Error Message */}
 								{error && (
 									<div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
 										{error}
@@ -188,7 +185,6 @@ Created: ${new Date().toISOString()}
 						</DialogHeader>
 
 						<div className="grid gap-4 py-4">
-							{/* Security Warning */}
 							<div className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
 								<div className="flex gap-3">
 									<AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-500" />
@@ -215,7 +211,6 @@ Created: ${new Date().toISOString()}
 								</div>
 							</div>
 
-							{/* Key Display */}
 							<div className="grid gap-2">
 								<p className="text-sm font-medium">API Key</p>
 								<div className="flex items-center gap-2">
@@ -229,7 +224,6 @@ Created: ${new Date().toISOString()}
 								</div>
 							</div>
 
-							{/* Action Buttons */}
 							<div className="flex gap-2">
 								<CopyButton
 									value={createdKey?.key || ''}

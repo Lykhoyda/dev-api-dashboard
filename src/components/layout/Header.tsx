@@ -16,7 +16,6 @@ export function Header() {
 
 	return (
 		<header className="flex h-[65px] items-center justify-between border-b border-border-dark px-6 sticky top-0 bg-surface-dark/80 backdrop-blur-sm z-10 transition-colors duration-200">
-			{/* Breadcrumb */}
 			<div className="flex items-center gap-2">
 				<Link
 					to="/"
@@ -30,12 +29,9 @@ export function Header() {
 				</span>
 			</div>
 
-			{/* Right side actions */}
 			<div className="flex items-center gap-4">
-				{/* Environment Mode Toggle */}
 				<EnvironmentToggle />
 
-				{/* User Menu */}
 				<div className="flex items-center gap-2 pl-2 border-l border-divider-dark">
 					<div className="flex items-center gap-2 px-2 py-1">
 						<div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-dark/10 border border-primary-dark/20">

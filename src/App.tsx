@@ -13,10 +13,8 @@ function App() {
 		<div className="dark">
 			<BrowserRouter>
 				<Routes>
-					{/* Public route - Login page */}
 					<Route path="/login" element={<Login />} />
 
-					{/* Protected routes - wrapped in AppShell */}
 					<Route
 						path="/"
 						element={
@@ -58,7 +56,6 @@ function App() {
 						}
 					/>
 
-					{/* Redirect any unknown routes to dashboard */}
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
 				<Toaster />

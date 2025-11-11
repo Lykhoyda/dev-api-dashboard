@@ -8,7 +8,6 @@ interface NavItemProps {
 	fillWhenActive?: boolean;
 }
 
-// Hoist className function to avoid recreating on every render
 const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
 	isActive
 		? 'flex items-center gap-2 px-2 py-2 rounded-lg text-text-primary-dark bg-surface-elevated-dark border-l-2 border-primary-dark transition-colors duration-200'

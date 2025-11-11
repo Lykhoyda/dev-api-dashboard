@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUp, TrendingUp } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import {
 	Area,
 	AreaChart,
@@ -11,24 +11,9 @@ import {
 } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { useEnvironment } from '@/contexts/EnvironmentContext';
+import type { UsageDataset } from '@/types/mock-data';
 
-// Time range options
 type TimeRange = '24h' | '7d' | '30d';
-
-interface UsageData {
-	environment: string;
-	startDate: string;
-	endDate: string;
-	requests: Array<{
-		id: string;
-		keyId: string;
-		endpoint: string;
-		method: string;
-		statusCode: number;
-		responseTimeMs: number;
-		timestamp: string;
-	}>;
-}
 
 interface StatsCardProps {
 	title: string;
@@ -84,32 +69,46 @@ function StatsCard({
 export function Usage() {
 	const { mode } = useEnvironment();
 	const [timeRange, setTimeRange] = useState<TimeRange>('7d');
-	const [usageData, setUsageData] = useState<UsageData | null>(null);
+	const [usageData, setUsageData] = useState<UsageDataset | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	// Load usage data
-	useMemo(() => {
+	useEffect(() => {
+		const controller = new AbortController();
+
 		const loadData = async () => {
 			try {
 				setLoading(true);
 				setError(null);
-				const response = await fetch(`/data/usage-${mode}.json`);
+				const response = await fetch(`/data/usage-${mode}.json`, {
+					signal: controller.signal
+				});
 				if (!response.ok) {
 					throw new Error('Failed to load usage data');
 				}
 				const data = await response.json();
 				setUsageData(data);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : 'Failed to load data');
+				// Don't set error state if request was aborted (component unmounted or mode changed)
+				if (err instanceof Error && err.name !== 'AbortError') {
+					setError(err.message);
+				}
 			} finally {
-				setLoading(false);
+				// Don't update loading state if request was aborted
+				if (!controller.signal.aborted) {
+					setLoading(false);
+				}
 			}
 		};
+
 		loadData();
+
+		// Cleanup: abort the fetch if component unmounts or mode changes
+		return () => {
+			controller.abort();
+		};
 	}, [mode]);
 
-	// Filter requests by selected time range
 	const filteredRequests = useMemo(() => {
 		if (!usageData) return [];
 
@@ -133,7 +132,6 @@ export function Usage() {
 		);
 	}, [usageData, timeRange]);
 
-	// Calculate stats from filtered data
 	const stats = useMemo(() => {
 		if (filteredRequests.length === 0) {
 			return {
@@ -162,7 +160,6 @@ export function Usage() {
 		};
 	}, [filteredRequests]);
 
-	// Prepare chart data from filtered requests
 	const chartData = useMemo(() => {
 		if (filteredRequests.length === 0) return [];
 
@@ -174,7 +171,6 @@ export function Usage() {
 			groupedByDay.set(dayKey, (groupedByDay.get(dayKey) || 0) + 1);
 		}
 
-		// Sort by date and create chart data
 		return Array.from(groupedByDay.entries())
 			.sort(([a], [b]) => a.localeCompare(b))
 			.map(([date, count]) => ({
@@ -215,7 +211,6 @@ export function Usage() {
 	return (
 		<div className="flex-1 p-6 md:p-12">
 			<div className="flex flex-col gap-6">
-				{/* Page Header */}
 				<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight">
@@ -226,7 +221,6 @@ export function Usage() {
 						</p>
 					</div>
 
-					{/* Time Range Filter */}
 					<div className="flex items-center gap-1 rounded-lg border border-border-dark bg-surface-dark p-1">
 						<Button
 							variant={timeRange === '24h' ? 'default' : 'ghost'}
@@ -252,7 +246,6 @@ export function Usage() {
 					</div>
 				</div>
 
-				{/* Stats Cards */}
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<StatsCard
 						title="Total Requests"
@@ -278,7 +271,6 @@ export function Usage() {
 					/>
 				</div>
 
-				{/* Request Volume Chart */}
 				<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 					<div className="mb-4">
 						<h2 className="text-lg font-semibold">Request Volume</h2>
@@ -336,7 +328,6 @@ export function Usage() {
 					</div>
 				</div>
 
-				{/* Additional Metrics */}
 				<div className="grid gap-4 md:grid-cols-2">
 					<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark">
 						<h3 className="font-semibold">Error Rate</h3>

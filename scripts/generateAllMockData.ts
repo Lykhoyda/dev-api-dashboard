@@ -367,13 +367,13 @@ function main() {
 	console.log('🔑 Generating API keys...');
 	const apiKeys = generateApiKeys();
 	console.log(`   Generated ${apiKeys.length} keys`);
-	console.log(`   - Test: ${apiKeys.filter((k) => k.environment === 'test').length}`);
+	console.log(
+		`   - Test: ${apiKeys.filter((k) => k.environment === 'test').length}`
+	);
 	console.log(
 		`   - Production: ${apiKeys.filter((k) => k.environment === 'production').length}`
 	);
-	console.log(
-		`   - Active: ${apiKeys.filter((k) => !k.revoked).length}\n`
-	);
+	console.log(`   - Active: ${apiKeys.filter((k) => !k.revoked).length}\n`);
 
 	// Step 2: Generate usage data using the generated key IDs
 	console.log('📊 Generating usage data...');

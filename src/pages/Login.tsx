@@ -23,7 +23,6 @@ export function Login() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	// Redirect authenticated users to dashboard
 	useEffect(() => {
 		if (isAuthenticated) {
 			navigate('/', { replace: true });
@@ -35,14 +34,11 @@ export function Login() {
 		setError(null);
 
 		try {
-			// Simulate network delay for realistic UX
 			await new Promise((resolve) => setTimeout(resolve, 500));
 
-			// Create guest session
 			const success = await login('guest@example.com', 'Guest User');
 
 			if (success) {
-				// Navigate to dashboard
 				navigate('/', { replace: true });
 			} else {
 				setError(
@@ -60,7 +56,6 @@ export function Login() {
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-background-dark p-6">
 			<div className="w-full max-w-md">
-				{/* Header */}
 				<div className="text-center mb-12">
 					<div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary-dark/10 border border-primary-dark/20 mb-6">
 						<LogIn className="w-8 h-8 text-primary-dark" aria-hidden="true" />
@@ -73,10 +68,8 @@ export function Login() {
 					</p>
 				</div>
 
-				{/* Login Card */}
 				<div className="rounded-xl p-8 bg-surface-dark border border-border-dark shadow-md-dark">
 					<div className="flex flex-col gap-6">
-						{/* Error Message */}
 						{error && (
 							<div
 								className="p-4 rounded-lg bg-error-dark/10 border border-error-dark/20"
@@ -86,7 +79,6 @@ export function Login() {
 							</div>
 						)}
 
-						{/* Guest Login Button */}
 						<button
 							type="button"
 							onClick={handleGuestLogin}
@@ -107,7 +99,6 @@ export function Login() {
 							)}
 						</button>
 
-						{/* Information */}
 						<div className="pt-4 border-t border-divider-dark">
 							<p className="text-xs text-text-tertiary-dark text-center">
 								This is a demo application. Guest sign-in creates a mock session
@@ -117,7 +108,6 @@ export function Login() {
 					</div>
 				</div>
 
-				{/* Footer */}
 				<p className="text-xs text-text-tertiary-dark text-center mt-8">
 					Session expires after 24 hours
 				</p>

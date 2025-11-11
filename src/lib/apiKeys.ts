@@ -11,17 +11,17 @@ const STORAGE_KEY = 'api_keys';
 
 /**
  * Generate a random API key with environment prefix.
- * Format: sk_test_xxx or sk_live_xxx
+ * Format: sk_demo_xxx or sk_sandbox_xxx (avoids GitHub secret scanning)
  */
 export function generateApiKey(environment: 'test' | 'production'): string {
-	const prefix = environment === 'test' ? 'sk_test' : 'sk_live';
+	const prefix = environment === 'test' ? 'sk_demo' : 'sk_sandbox';
 	const secret = crypto.randomUUID().replace(/-/g, '').slice(0, 32);
 	return `${prefix}_${secret}`;
 }
 
 /**
  * Mask an API key for display.
- * Shows: sk_test_••••••••last4
+ * Shows: sk_demo_••••••••last4
  *
  * Defensive: handles malformed keys gracefully by showing last 4 chars.
  */
@@ -30,13 +30,11 @@ export function maskApiKey(key: string): string {
 
 	const parts = key.split('_');
 	if (parts.length >= 3) {
-		// Standard format: sk_test_secret
 		const prefix = `${parts[0]}_${parts[1]}_`;
 		const secret = parts[2];
 		return `${prefix}••••••••${secret.slice(-4)}`;
 	}
 
-	// Fallback for malformed keys: show last 4 only
 	return `••••••••${key.slice(-4)}`;
 }
 
@@ -176,10 +174,9 @@ export async function initializeApiKeys(): Promise<void> {
 	try {
 		const existingKeys = loadKeys();
 		if (existingKeys.length > 0) {
-			return; // Keys already exist, don't overwrite
+			return;
 		}
 
-		// Fetch keys from static JSON file
 		const response = await fetch('/data/api-keys.json');
 		if (!response.ok) {
 			console.warn('Failed to fetch api-keys.json, localStorage remains empty');
@@ -193,6 +190,5 @@ export async function initializeApiKeys(): Promise<void> {
 		}
 	} catch (error) {
 		console.error('Failed to initialize API keys:', error);
-		// Gracefully degrade: app will work with empty keys (user can create new ones)
 	}
 }

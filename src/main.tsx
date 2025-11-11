@@ -7,10 +7,8 @@ import { EnvironmentProvider } from './contexts/EnvironmentContext';
 import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext';
 import { initializeApiKeys } from './lib/apiKeys';
 
-// Apply dark theme
 document.documentElement.classList.add('dark');
 
-// Initialize API keys from static JSON if localStorage is empty
 initializeApiKeys();
 
 const rootElement = document.getElementById('root');

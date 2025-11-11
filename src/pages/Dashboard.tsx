@@ -22,7 +22,6 @@ export function Dashboard() {
 	const { mode } = useEnvironment();
 	const firstName = user?.name.split(' ')[0] || 'Guest';
 
-	// Calculate real API key metrics from localStorage
 	const keyMetrics = useMemo(() => {
 		const allKeys = getApiKeys();
 		const environmentKeys = allKeys.filter((key) => key.environment === mode);
@@ -41,7 +40,6 @@ export function Dashboard() {
 			title={`Welcome back, ${firstName}!`}
 			description="Here's a summary of your activity today."
 		>
-			{/* Stats Grid */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				<MetricCard
 					title="API Calls Today"
@@ -67,9 +65,7 @@ export function Dashboard() {
 				/>
 			</div>
 
-			{/* Recent Activity and Quick Actions Grid */}
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-				{/* Recent Activity Section */}
 				<div className="lg:col-span-2 flex flex-col gap-4 rounded-xl p-6 bg-surface-dark border border-border-dark shadow-sm-dark transition-colors duration-200">
 					<h2 className="text-lg font-semibold text-text-primary-dark">
 						Recent Activity
@@ -120,7 +116,6 @@ export function Dashboard() {
 					</ul>
 				</div>
 
-				{/* Quick Actions Section */}
 				<div className="flex flex-col gap-4">
 					<h2 className="text-lg font-semibold text-text-primary-dark">
 						Quick Actions
@@ -148,7 +143,6 @@ export function Dashboard() {
 				</div>
 			</div>
 
-			{/* Feature Flags Panel */}
 			<FeatureFlagsPanel />
 		</PageLayout>
 	);

@@ -27,7 +27,6 @@ import { isStorageAvailable } from '@/lib/storage';
  * - Implement CSRF protection
  */
 
-// Session duration: 24 hours in milliseconds
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 const STORAGE_KEY = 'auth_session';
 
@@ -61,7 +60,6 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
  * though still not suitable for real authentication.
  */
 function generateMockToken(): string {
-	// Use crypto.randomUUID() if available, fallback to Math.random()
 	const randomPart =
 		typeof crypto !== 'undefined' && crypto.randomUUID
 			? crypto.randomUUID()
@@ -85,7 +83,6 @@ function loadSession(): Session | null {
 
 		const session: Session = JSON.parse(stored);
 
-		// Check if session is expired
 		if (Date.now() >= session.expiresAt) {
 			localStorage.removeItem(STORAGE_KEY);
 			return null;
@@ -190,7 +187,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		[clearExpiryTimeout]
 	);
 
-	// Load session on mount and set expiry timeout
 	useEffect(() => {
 		const loadedSession = loadSession();
 
@@ -221,7 +217,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 				expiresAt: Date.now() + SESSION_DURATION
 			};
 
-			// Attempt to save session
 			const saved = saveSession(newSession);
 
 			if (saved) {
@@ -230,8 +225,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 				return true;
 			}
 
-			// If save failed, don't update state to avoid UI showing logged in
-			// when session won't persist
 			console.error('Failed to persist session - login aborted');
 			return false;
 		},
@@ -247,30 +240,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		setSession(null);
 	}, [clearExpiryTimeout]);
 
-	// Multi-tab synchronization via storage events
 	useEffect(() => {
 		if (!isStorageAvailable()) {
 			return;
 		}
 
 		function handleStorageChange(e: StorageEvent) {
-			// Only handle changes to our auth session key
 			if (e.key !== STORAGE_KEY) {
 				return;
 			}
 
-			// Session was removed (logout in another tab)
 			if (e.newValue === null) {
 				clearExpiryTimeout();
 				setSession(null);
 				return;
 			}
 
-			// Session was updated or created in another tab
 			try {
 				const newSession: Session = JSON.parse(e.newValue);
 
-				// Validate expiry
 				if (Date.now() >= newSession.expiresAt) {
 					clearExpiryTimeout();
 					setSession(null);
@@ -288,11 +276,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		return () => window.removeEventListener('storage', handleStorageChange);
 	}, [clearExpiryTimeout, setExpiryTimeout]);
 
-	// Check session validity on visibility change (user returns to tab)
 	useEffect(() => {
 		function handleVisibilityChange() {
 			if (document.visibilityState === 'visible' && session) {
-				// Re-validate session when tab becomes visible
 				const currentSession = loadSession();
 				if (!currentSession) {
 					clearExpiryTimeout();
@@ -306,7 +292,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 	}, [session, clearExpiryTimeout]);
 
-	// Cleanup timeout on unmount
 	useEffect(() => {
 		return () => {
 			clearExpiryTimeout();

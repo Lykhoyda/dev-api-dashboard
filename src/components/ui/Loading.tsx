@@ -36,12 +36,10 @@ const SIZE_CLASSES = {
  * - Accessible with aria-label
  * - Smooth animation
  *
- * @example
- * // Full-page loading
+ * @example Full-page loading
  * <Loading fullPage size="lg" text="Loading..." />
  *
- * @example
- * // Inline in button
+ * @example Inline in button
  * <button disabled>
  *   <Loading size="sm" />
  *   <span>Loading...</span>

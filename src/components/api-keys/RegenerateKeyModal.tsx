@@ -99,7 +99,6 @@ The old key has been invalidated.
 	};
 
 	const handleClose = () => {
-		// Reset state
 		setStep('confirm');
 		setRegeneratedKey(null);
 		setIsFlashing(false);
@@ -141,7 +140,6 @@ The old key has been invalidated.
 						</DialogHeader>
 
 						<div className="grid gap-4 py-4">
-							{/* Warning */}
 							<div className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
 								<div className="flex gap-3">
 									<AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-500" />
@@ -178,7 +176,6 @@ The old key has been invalidated.
 								</div>
 							</div>
 
-							{/* Error Message */}
 							{error && (
 								<div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
 									{error}
@@ -214,7 +211,6 @@ The old key has been invalidated.
 						</DialogHeader>
 
 						<div className="grid gap-4 py-4">
-							{/* Security Warning */}
 							<div className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
 								<div className="flex gap-3">
 									<AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-500" />
@@ -239,7 +235,6 @@ The old key has been invalidated.
 								</div>
 							</div>
 
-							{/* Key Display */}
 							<div className="grid gap-2">
 								<p className="text-sm font-medium">New API Key</p>
 								<div className="flex items-center gap-2">
@@ -253,7 +248,6 @@ The old key has been invalidated.
 								</div>
 							</div>
 
-							{/* Action Buttons */}
 							<div className="flex gap-2">
 								<CopyButton
 									value={regeneratedKey?.key || ''}
@@ -272,7 +266,6 @@ The old key has been invalidated.
 								</Button>
 							</div>
 
-							{/* Notes Field */}
 							<div className="grid gap-2">
 								<label htmlFor="notes" className="text-sm font-medium">
 									Where did you save this key? (optional)

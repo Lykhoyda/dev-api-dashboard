@@ -31,7 +31,6 @@ export function PageLayout({
 	return (
 		<main className={`flex-1 p-6 md:p-12 ${className}`} {...props}>
 			<div className="flex flex-col gap-12">
-				{/* Page Header */}
 				<div className="flex flex-col gap-1">
 					<h1 className="text-3xl font-bold tracking-tight text-text-primary-dark">
 						{title}
@@ -41,7 +40,6 @@ export function PageLayout({
 					)}
 				</div>
 
-				{/* Page Content */}
 				{children}
 			</div>
 		</main>

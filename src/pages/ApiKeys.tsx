@@ -53,15 +53,12 @@ export function ApiKeys() {
 	const [keyToRegenerate, setKeyToRegenerate] = useState<ApiKey | null>(null);
 	const [updateTrigger, setUpdateTrigger] = useState(0);
 
-	// Check if card view is enabled via feature flag
 	const useCardView = isEnabled('cardViewForApiKeys');
 
-	// Trigger re-render after key operations
 	const handleKeyUpdate = useCallback(() => {
 		setUpdateTrigger((prev) => prev + 1);
 	}, []);
 
-	// Listen for storage changes in other tabs
 	useEffect(() => {
 		const handleStorageChange = (e: StorageEvent) => {
 			if (e.key === 'api_keys') {
@@ -74,18 +71,14 @@ export function ApiKeys() {
 		return () => window.removeEventListener('storage', handleStorageChange);
 	}, [handleKeyUpdate]);
 
-	// Get all keys (memoized to avoid unnecessary localStorage reads)
-	// Using updateTrigger state as dependency to trigger re-fetch
 	// biome-ignore lint/correctness/useExhaustiveDependencies: updateTrigger counter intentionally triggers refetch
 	const allKeys = useMemo(() => getApiKeys(), [updateTrigger]);
 
-	// Filter by current environment (memoized with proper dependencies)
 	const environmentKeys = useMemo(
 		() => allKeys.filter((key) => key.environment === mode),
 		[allKeys, mode]
 	);
 
-	// Filter keys by search query
 	const filteredKeys = useMemo(() => {
 		if (!searchQuery.trim()) {
 			return environmentKeys;
@@ -102,7 +95,6 @@ export function ApiKeys() {
 	return (
 		<div className="flex-1 p-6 md:p-12">
 			<div className="flex flex-col gap-6">
-				{/* Page Header */}
 				<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2">
@@ -120,7 +112,6 @@ export function ApiKeys() {
 					</div>
 
 					<div className="flex items-center gap-3">
-						{/* Search Input */}
 						<div className="relative w-full md:w-64">
 							<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
@@ -132,7 +123,6 @@ export function ApiKeys() {
 							/>
 						</div>
 
-						{/* Create Button */}
 						<Button
 							className="gap-2 whitespace-nowrap"
 							onClick={() => setCreateModalOpen(true)}
@@ -143,7 +133,6 @@ export function ApiKeys() {
 					</div>
 				</div>
 
-				{/* Data Display - Card View or Table View */}
 				{filteredKeys.length === 0 ? (
 					<div className="overflow-hidden rounded-xl border border-border-dark bg-surface-dark shadow-sm-dark">
 						<EmptyState
@@ -153,7 +142,6 @@ export function ApiKeys() {
 					</div>
 				) : useCardView ? (
 					<>
-						{/* Card Grid View */}
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{filteredKeys.map((key) => (
 								<ApiKeyCard
@@ -168,7 +156,6 @@ export function ApiKeys() {
 							))}
 						</div>
 
-						{/* Card View Footer */}
 						<div className="flex items-center justify-between rounded-xl border border-border-dark bg-surface-dark px-4 py-3 shadow-sm-dark">
 							<div className="text-sm text-muted-foreground">
 								Showing {filteredKeys.length} of {environmentKeys.length} keys
@@ -177,7 +164,6 @@ export function ApiKeys() {
 					</>
 				) : (
 					<div className="overflow-hidden rounded-xl border border-border-dark bg-surface-dark shadow-sm-dark">
-						{/* Table View */}
 						<div className="overflow-x-auto">
 							<Table>
 								<TableHeader>
@@ -208,7 +194,6 @@ export function ApiKeys() {
 							</Table>
 						</div>
 
-						{/* Table View Footer */}
 						<div className="flex items-center justify-between border-t px-4 py-3">
 							<div className="text-sm text-muted-foreground">
 								Showing {filteredKeys.length} of {environmentKeys.length} keys
@@ -218,14 +203,12 @@ export function ApiKeys() {
 				)}
 			</div>
 
-			{/* Create Key Modal */}
 			<CreateKeyModal
 				open={createModalOpen}
 				onOpenChange={setCreateModalOpen}
 				onKeyCreated={handleKeyUpdate}
 			/>
 
-			{/* Regenerate Key Modal */}
 			<RegenerateKeyModal
 				open={regenerateModalOpen}
 				onOpenChange={setRegenerateModalOpen}
@@ -291,30 +274,24 @@ function KeyRow({
 	return (
 		<>
 			<TableRow>
-				{/* Name */}
 				<TableCell className="pl-4 font-semibold">{apiKey.name}</TableCell>
 
-				{/* Masked Key - No copy allowed after creation */}
 				<TableCell>
 					<code className="font-mono text-sm text-muted-foreground">
 						{maskApiKey(apiKey.key)}
 					</code>
 				</TableCell>
 
-				{/* Created */}
 				<TableCell className="text-muted-foreground">
 					{formatRelativeTime(apiKey.createdAt)}
 				</TableCell>
 
-				{/* Last Used */}
 				<TableCell className="text-muted-foreground">Never</TableCell>
 
-				{/* Status */}
 				<TableCell>
 					<ApiKeyStatusBadge revoked={apiKey.revoked} />
 				</TableCell>
 
-				{/* Actions */}
 				<TableCell className="text-right">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
@@ -345,7 +322,6 @@ function KeyRow({
 				</TableCell>
 			</TableRow>
 
-			{/* Revoke Confirmation Dialog */}
 			<AlertDialog open={revokeDialogOpen} onOpenChange={setRevokeDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
@@ -368,7 +344,6 @@ function KeyRow({
 				</AlertDialogContent>
 			</AlertDialog>
 
-			{/* Delete Confirmation Dialog */}
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>

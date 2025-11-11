@@ -49,7 +49,6 @@ export function EnvironmentToggle() {
 	const productionRef = useRef<HTMLButtonElement>(null);
 	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-	// Handle keyboard navigation
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
 			const target = event.target as HTMLElement;
@@ -110,7 +109,6 @@ export function EnvironmentToggle() {
 				data-environment-toggle
 				className="inline-flex items-center gap-0 p-1 rounded-full bg-surface-elevated-dark border border-border-dark"
 			>
-				{/* Test Mode Segment */}
 				<button
 					ref={testRef}
 					type="button"
@@ -137,7 +135,6 @@ export function EnvironmentToggle() {
 					<span className="whitespace-nowrap">Test</span>
 				</button>
 
-				{/* Production Mode Segment */}
 				<button
 					ref={productionRef}
 					type="button"
@@ -165,7 +162,6 @@ export function EnvironmentToggle() {
 				</button>
 			</div>
 
-			{/* Production Mode Confirmation Dialog */}
 			<Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
 				<DialogContent className="bg-surface-dark border-border-dark">
 					<DialogHeader>

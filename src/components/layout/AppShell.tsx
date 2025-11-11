@@ -10,7 +10,6 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex min-h-screen">
-			{/* Sidebar */}
 			<aside className="w-[280px] flex-col border-r border-border-dark bg-surface-dark hidden md:flex transition-colors duration-200">
 				<div className="flex h-full flex-col p-4">
 					<div className="flex flex-col gap-12">
@@ -20,7 +19,6 @@ export function AppShell({ children }: AppShellProps) {
 							</div>
 						</div>
 
-						{/* Navigation */}
 						<nav className="flex flex-col gap-1" aria-label="Main navigation">
 							{ROUTES.map((route) => (
 								<NavItem key={route.to} {...route} />
@@ -30,7 +28,6 @@ export function AppShell({ children }: AppShellProps) {
 				</div>
 			</aside>
 
-			{/* Main Content Area */}
 			<div className="flex-1 flex flex-col">
 				<Header />
 				{children}

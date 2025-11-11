@@ -45,7 +45,6 @@ export function Documentation() {
 	return (
 		<div className="flex-1 p-6 md:p-12">
 			<div className="mx-auto max-w-4xl space-y-12">
-				{/* Page Header */}
 				<div className="space-y-4">
 					<div className="flex items-center gap-2">
 						<h1 className="text-3xl font-bold tracking-tight">
@@ -61,7 +60,6 @@ export function Documentation() {
 					</p>
 				</div>
 
-				{/* About This Sandbox - Transparency First */}
 				<div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-6">
 					<div className="flex gap-4">
 						<AlertCircle className="h-6 w-6 flex-shrink-0 text-primary" />
@@ -102,7 +100,6 @@ export function Documentation() {
 					</div>
 				</div>
 
-				{/* Getting Started with the Console */}
 				<Section title="Getting Started">
 					<div className="space-y-4">
 						<p className="text-muted-foreground">
@@ -169,7 +166,6 @@ export function Documentation() {
 					</div>
 				</Section>
 
-				{/* Technical Architecture */}
 				<Section title="Technical Architecture">
 					<div className="space-y-4">
 						<p className="text-muted-foreground">
@@ -275,7 +271,6 @@ export function Documentation() {
 					</div>
 				</Section>
 
-				{/* Troubleshooting */}
 				<Section title="Troubleshooting">
 					<div className="space-y-4">
 						<p className="text-muted-foreground">
@@ -283,7 +278,6 @@ export function Documentation() {
 						</p>
 
 						<div className="space-y-4">
-							{/* No API Keys */}
 							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									"No API keys found" or empty key list
@@ -307,7 +301,6 @@ export function Documentation() {
 								</ul>
 							</div>
 
-							{/* Analytics Not Updating */}
 							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									Analytics data not updating
@@ -332,7 +325,6 @@ export function Documentation() {
 								</ul>
 							</div>
 
-							{/* Private Browsing */}
 							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">
 									Issues with Private/Incognito mode
@@ -355,7 +347,6 @@ export function Documentation() {
 								</ul>
 							</div>
 
-							{/* Reset Sandbox */}
 							<div className="rounded-lg border border-border-dark bg-surface-dark p-4">
 								<h3 className="mb-2 font-semibold">How to reset the sandbox</h3>
 								<ul className="space-y-2 text-sm text-muted-foreground">

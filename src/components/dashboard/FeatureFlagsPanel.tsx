@@ -26,7 +26,6 @@ export function FeatureFlagsPanel() {
 			</p>
 
 			<div className="space-y-4">
-				{/* Card View for API Keys Toggle */}
 				<div className="flex items-center justify-between rounded-lg border border-border-dark bg-muted p-4 transition-colors hover:bg-muted/80">
 					<div className="flex items-center gap-3">
 						<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

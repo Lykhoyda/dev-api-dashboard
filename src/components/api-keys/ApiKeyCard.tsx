@@ -76,7 +76,6 @@ export function ApiKeyCard({
 	return (
 		<>
 			<div className="rounded-xl border border-border-dark bg-surface-dark p-6 shadow-sm-dark transition-shadow hover:shadow-md">
-				{/* Header with Name and Actions */}
 				<div className="mb-4 flex items-start justify-between">
 					<div className="flex items-center gap-3">
 						<div
@@ -126,7 +125,6 @@ export function ApiKeyCard({
 					</DropdownMenu>
 				</div>
 
-				{/* API Key Value */}
 				<div className="mb-4 rounded-lg bg-muted/50 p-3">
 					<div className="text-xs font-medium text-muted-foreground mb-1">
 						API KEY
@@ -134,7 +132,6 @@ export function ApiKeyCard({
 					<code className="font-mono text-sm">{maskApiKey(apiKey.key)}</code>
 				</div>
 
-				{/* Metadata */}
 				<div className="space-y-2 text-sm">
 					<div className="flex items-center gap-2 text-muted-foreground">
 						<Calendar className="h-4 w-4" />
@@ -147,7 +144,6 @@ export function ApiKeyCard({
 				</div>
 			</div>
 
-			{/* Revoke Confirmation Dialog */}
 			<AlertDialog open={revokeDialogOpen} onOpenChange={setRevokeDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
@@ -170,7 +166,6 @@ export function ApiKeyCard({
 				</AlertDialogContent>
 			</AlertDialog>
 
-			{/* Delete Confirmation Dialog */}
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>

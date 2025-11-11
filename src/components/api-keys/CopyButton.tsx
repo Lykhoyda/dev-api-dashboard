@@ -45,10 +45,8 @@ export function CopyButton({
 				setCopied(true);
 				toast.success('Copied to clipboard');
 
-				// Call parent callback for additional feedback (e.g., flash animation)
 				onCopySuccess?.();
 
-				// Reset button state after 2 seconds
 				setTimeout(() => {
 					setCopied(false);
 				}, 2000);

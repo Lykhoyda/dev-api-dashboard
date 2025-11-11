@@ -117,23 +117,19 @@ export function EnvironmentProvider({ children }: EnvironmentProviderProps) {
 		setMode(mode === 'test' ? 'production' : 'test');
 	}, [mode, setMode]);
 
-	// Multi-tab synchronization via storage events
 	useEffect(() => {
 		if (!isStorageAvailable()) {
 			return;
 		}
 
 		function handleStorageChange(e: StorageEvent) {
-			// Only handle changes to our environment mode key
 			if (e.key !== STORAGE_KEY) {
 				return;
 			}
 
-			// Mode was updated in another tab
 			if (e.newValue === 'test' || e.newValue === 'production') {
 				setModeState(e.newValue);
 			} else {
-				// Invalid value or key removed - reset to default
 				setModeState(DEFAULT_MODE);
 			}
 		}
@@ -142,7 +138,6 @@ export function EnvironmentProvider({ children }: EnvironmentProviderProps) {
 		return () => window.removeEventListener('storage', handleStorageChange);
 	}, []);
 
-	// Sync mode with localStorage on mount
 	useEffect(() => {
 		const loadedMode = loadMode();
 		if (loadedMode !== mode) {
