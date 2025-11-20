@@ -1,51 +1,51 @@
 {
   "keys": [
     {
-      "id": "985ed066-ef79-4224-b154-0714c2d2ab13",
+      "id": "629300f3-aea6-4025-b9b2-9545b717e7b9",
       "name": "Production Server Key",
-      "key": "sk_demo_d7472a316901436db6bec0f8f6edb631",
+      "key": "sk_demo_d72e56e37af049e98e24aeb0fa52ab96",
       "environment": "test",
-      "createdAt": "2025-10-28T13:46:06.167Z",
+      "createdAt": "2025-11-06T12:24:25.327Z",
       "revoked": false
     },
     {
-      "id": "4d0fa772-81cc-44c2-aedc-904a910527b6",
+      "id": "63ceafd7-c851-401e-915c-3277295de919",
       "name": "Staging Environment",
-      "key": "sk_demo_0f7fe28f16b146e9b6a3f1ab2aa6fd15",
+      "key": "sk_demo_e4157f4fd62c408b973c79fa4c80157a",
       "environment": "test",
-      "createdAt": "2025-10-12T13:46:06.167Z",
+      "createdAt": "2025-10-21T12:24:25.327Z",
       "revoked": false
     },
     {
-      "id": "55690342-94f2-48f3-aa9d-6440ef50c2f8",
+      "id": "9847e0ff-579c-46a7-9f1a-e3a0775c26af",
       "name": "Legacy Mobile App",
-      "key": "sk_demo_c9c629b048df4332b52eefaca7121638",
+      "key": "sk_demo_c05cb0a4e2de4acca693b1efe932ebdd",
       "environment": "test",
-      "createdAt": "2025-05-15T13:46:06.167Z",
+      "createdAt": "2025-05-24T12:24:25.327Z",
       "revoked": true
     },
     {
-      "id": "f08f86c3-a763-4964-9bb6-400c2220bb7b",
+      "id": "927f2247-6c73-43ca-b625-26d091f1454b",
       "name": "Local Dev Key",
-      "key": "sk_demo_bdff9736670840d7ae81774df871da9c",
+      "key": "sk_demo_ab677a3c96994217b99f968e7ad27580",
       "environment": "test",
-      "createdAt": "2025-11-10T13:46:06.167Z",
+      "createdAt": "2025-11-19T12:24:25.327Z",
       "revoked": false
     },
     {
-      "id": "1fce4769-c664-4dfd-a628-aba20c50fe6f",
+      "id": "2e3b11a4-e457-417a-a7de-196dd022da87",
       "name": "Production API Key",
-      "key": "sk_sandbox_e422b16bd42042ee8d34109d8b096b82",
+      "key": "sk_sandbox_95727f748be240269b506450af227f66",
       "environment": "production",
-      "createdAt": "2025-10-28T13:46:06.167Z",
+      "createdAt": "2025-11-06T12:24:25.327Z",
       "revoked": false
     },
     {
-      "id": "26529f7f-6ccb-4552-80c4-5b52f07b603e",
+      "id": "6a2165cf-4fbe-41af-9712-9e82557e8db6",
       "name": "Production Backup",
-      "key": "sk_sandbox_efe892793bee4002b05700f9f587c4e8",
+      "key": "sk_sandbox_a5ae036ca9d04faea1524fa1744df669",
       "environment": "production",
-      "createdAt": "2025-10-12T13:46:06.167Z",
+      "createdAt": "2025-10-21T12:24:25.327Z",
       "revoked": false
     }
   ]
